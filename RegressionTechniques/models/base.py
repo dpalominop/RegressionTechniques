@@ -2,6 +2,7 @@
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor, ExtraTreesRegressor
 from sklearn.grid_search import GridSearchCV
 from sklearn.metrics import make_scorer, mean_squared_error
+from sklearn import linear_model, metrics
  
 def mean_squared_error_(ground_truth, predictions):
     return mean_squared_error(ground_truth, predictions) ** 0.5
@@ -68,6 +69,46 @@ def model_extra_trees_regression(Xtrain,Xtest,ytrain):
 
 def model_regression_multivariable(Xtrain, Xtest, ytrain):
     X_train = Xtrain
+    X_test  = Xtest
+    
     y_train = ytrain
 
+    # create linear regression object 
+    reg = linear_model.LinearRegression() 
 
+    # train the model using the training sets 
+    reg.fit(X_train, y_train)
+    
+    return reg.predict(X_test), reg.score(X_train, y_train)
+
+def model_regression_multivariable_own(Xtrain, Xtest, ytrain):
+    import numpy as np
+    X_train = Xtrain
+    X_test  = Xtest
+    
+    y_train = ytrain
+
+    X_train = (X_train - X_train.mean())/X_train.std()
+    X_test = (X_test - X_test.mean())/X_test.std()
+
+    theta = np.zeros([1,268])
+
+    def computeCost(X,Y,theta):
+        tobesummed = np.power((X_train @ theta.T).sub(y_train, axis=0),2)
+        return np.sum(tobesummed)/(2 * len(X))
+
+    def gradientDescent(X, Y, theta,iters,alpha):
+        cost = np.zeros(iters)
+        for i in range(iters):
+            theta = theta - (alpha/len(X)) * np.sum(X * (X_train @ theta.T).sub(y_train, axis=0).T, axis=0)
+            cost[i] = computeCost(X, Y, theta)
+    
+        return theta,cost
+
+    #set hyper parameters
+    alpha = 0.01
+    iters = 1000
+
+    g,cost = gradientDescent(X_train,y_train,theta,iters,alpha)
+
+    return (X_test @ theta.T), 1
