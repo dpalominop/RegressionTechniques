@@ -28,6 +28,17 @@
   <ItemGroup>
     <InterpreterReference Include="Global|ContinuumAnalytics|Anaconda36-64" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="data\data_description.txt" />
+    <Content Include="data\sample_submission.csv" />
+    <Content Include="data\test.csv" />
+    <Content Include="data\train.csv" />
+    <Content Include="models\base.py" />
+    <Content Include="ExploratoryAnalysis.ipynb" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
        Visual Studio and specify your pre- and post-build commands in
